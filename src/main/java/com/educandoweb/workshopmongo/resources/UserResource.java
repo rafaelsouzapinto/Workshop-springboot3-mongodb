@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,15 +33,21 @@ public class UserResource {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDTO> findById(@PathVariable String id) {
-		User user = service.FindById(id);
+		User user = service.findById(id);
 		return ResponseEntity.ok().body(new UserDTO(user));
 	}
 	
 	@PostMapping
-	public ResponseEntity<User> insert(@RequestBody UserDTO objDto) {
+	public ResponseEntity<UserDTO> insert(@RequestBody UserDTO objDto) {
 		User obj = service.fromDTO(objDto);
 		obj = service.insert(obj);
-		return ResponseEntity.ok().body(obj);
+		return ResponseEntity.ok().body(new UserDTO(obj));
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<UserDTO> update(@RequestBody UserDTO objDto, @PathVariable String id) {
+		User obj = service.update(service.fromDTO(objDto), id);
+		return ResponseEntity.ok().body(new UserDTO(obj));
 	}
 
 }
